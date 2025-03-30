@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Performance Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #chain-id {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-size: 18px;
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        #data-container {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+
+        .ok {
+            color: green;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .sub-section {
+            margin-top: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        canvas {
+            width: 1000px !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Blockchain Performance Monitor</h1>
+    <div id="chain-id">Chain ID: Loading...</div>
+    <div id="timer">Next update in: 15s</div>
+    <div id="data-container">Loading data...</div>
+
+    <canvas id="txCountChart"></canvas>
+    <canvas id="gasLimitChart"></canvas>
+    <canvas id="totalDifficultyChart"></canvas>
+
+    <script>
+        let charts = {};
+        let timer = 15;
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/processed_data', { cache: "no-store" });
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                displayData(data.data);
+                resetTimer();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('data-container').innerText = 'Failed to load data.';
+            }
+        }
+
+        function displayData(data) {
+            const { history } = data;
+            const latestStats = history[history.length - 1];
+            const prevStats = history.length > 1 ? history[history.length - 2] : latestStats;
+            document.getElementById('chain-id').innerText = `Chain ID: ${latestStats.network.chainId}`;
+
+            document.getElementById('data-container').innerHTML = `
+            <div class="section">
+                    <h2>📊 Dashboard</h2>
+                    <p><strong>Network Health Score:</strong> ${latestStats.dashboard.networkHealthScore}</p>
+                    <div class="sub-section">
+                        <h3>Alerts</h3>
+                        ${Object.entries(latestStats.dashboard.alerts).map(([key, value]) =>
+                `<p><strong>${key}:</strong> <span class="${value ? 'alert' : 'ok'}">${value ? '⚠️ Issue Detected' : '✅ Healthy'}</span></p>`
+            ).join('')}
+                    </div>
+                    <div class="sub-section">
+                        <h3>Historical Comparison</h3>
+                        <p><strong>Avg Block Time:</strong> ${latestStats.dashboard.historicalComparison.avgBlockTime}s</p>
+                        <p><strong>Avg Transaction Rate:</strong> ${latestStats.dashboard.historicalComparison.avgTxnRate} tx/s</p>
+                        <p><strong>Avg Gas Usage:</strong> ${latestStats.dashboard.historicalComparison.avgGasUsage}%</p>
+                        <p><strong>Avg Peer Count:</strong> ${latestStats.dashboard.historicalComparison.avgPeerCount}</p>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>🛠️ Performance Insights</h2>
+                    <p><strong>Block Number:</strong> ${latestStats.performance.blockNumber}</p>
+                    <p><strong>Block Time:</strong> ${new Date(latestStats.performance.blockTime * 1000).toLocaleTimeString()}</p>
+                    <p><strong>Transaction Count:</strong> ${latestStats.performance.transactionCount}</p>
+                    <p><strong>Transaction Rate:</strong> ${latestStats.performance.transactionRate} tx/s</p>
+                    <p><strong>Gas Limit:</strong> ${latestStats.performance.gasLimit}</p>
+                    <p><strong>Gas Used:</strong> ${latestStats.performance.gasUsed}</p>
+                    <div class="sub-section">
+                        <h3>Performance Alerts</h3>
+                        <p><strong>Block Time:</strong> <span class="${latestStats.performance.blockTimeDiff < 15 ? 'alert' : latestStats.performance.blockTimeDiff > 15 ? 'alert' : 'ok'}">
+                        ${latestStats.performance.blockTimeDiff < 15 ? '⚠️ Slow Block' : latestStats.performance.blockTimeDiff > 15 ? '⚠️ Fast Block' : '✅ Healthy Block Time'}</span></p>
+                        <p><strong>Transaction Rate:</strong> <span class="${latestStats.performance.transactionRate > 5 ? 'alert' : 'ok'}">
+                        ${latestStats.performance.transactionRate > 5 ? '⚠️ High Transaction Rate' : '✅ Healthy'}</span></p>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>🔗 Network Health</h2>
+                    <p><strong>Peer Count:</strong> ${latestStats.network.peerCount}</p>
+                    <p><strong>Pending Transactions:</strong> ${latestStats.network.pendingTransactions}</p>
+                    <p><strong>Total Difficulty:</strong> ${latestStats.network.totalDifficulty}</p>
+                    <p><strong>Block Time Difference:</strong> ${latestStats.performance.blockTimeDiff}s</p>
+                    <div class="sub-section">
+                        <h3>Network Alerts</h3>
+                        <p><strong>Peer Count:</strong> <span class="${latestStats.network.peerCount < 3 ? 'alert' : 'ok'}">
+                        ${latestStats.network.peerCount < 3 ? '⚠️ Low Peer Count' : '✅ Healthy Peer Count'}</span></p>
+                        <p><strong>Pending Transactions:</strong> <span class="${latestStats.network.pendingTransactions > 5 ? 'alert' : 'ok'}">
+                        ${latestStats.network.pendingTransactions > 5 ? '⚠️ Network Congestion' : '✅ Healthy'}</span></p>
+                        <p><strong>Total Difficulty:</strong> <span class="${latestStats.network.totalDifficulty - prevStats.network.totalDifficulty > 5 ? 'alert' : 'ok'}">
+                        ${latestStats.network.totalDifficulty - prevStats.network.totalDifficulty > 5 ? '⚠️ Unhealthy Block Difficulty' : '✅ Healthy'}</span></p>
+                    </div>
+                    
+                </div>
+                <h2>Graphs for visualisation</h2>
+            `;
+
+            plotHistoryGraph('Transaction Count vs Block Number', 'txCountChart', history.map(h => h.performance.blockNumber), history.map(h => h.performance.transactionCount));
+            plotHistoryGraph('Gas Limit vs Block Number', 'gasLimitChart', history.map(h => h.performance.blockNumber), history.map(h => h.performance.gasLimit));
+            plotHistoryGraph('Total Difficulty vs Block Number', 'totalDifficultyChart', history.map(h => h.performance.blockNumber), history.map(h => h.network.totalDifficulty));
+        }
+
+        function plotHistoryGraph(label, canvasId, xData, yData) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            if (charts[canvasId]) charts[canvasId].destroy();
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xData,
+                    datasets: [{ label, data: yData, borderColor: 'blue', borderWidth: 2, fill: false }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function resetTimer() {
+            timer = 15;
+            document.getElementById('timer').innerText = `Next update in: ${timer}s`;
+        }
+
+        function countdown() {
+            if (timer > 0) {
+                timer--;
+                document.getElementById('timer').innerText = `Next update in: ${timer}s`;
+            }
+        }
+
+        fetchData();
+        setInterval(fetchData, 15000);
+        setInterval(countdown, 1000);
+    </script>
+</body>
+
+</html>
