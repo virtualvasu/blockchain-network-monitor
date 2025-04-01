@@ -6,29 +6,30 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../..
 import { plotHistoryGraph, getHealthColor } from "../../utils/chartUtils"
 
 const Dashboard = ({ data }) => {
+  const blockTimeChartRef = useRef(null)
   const txChartRef = useRef(null)
-  const gasChartRef = useRef(null)
   const diffChartRef = useRef(null)
+  const pendingTxChartRef = useRef(null)
   const charts = useRef({})
 
   useEffect(() => {
     if (data) {
       const { history } = data
       plotHistoryGraph(
-        txChartRef,
-        "Transaction Count",
+        blockTimeChartRef,
+        "Block Time",
         history.map((h) => h.performance.blockNumber),
-        history.map((h) => h.performance.transactionCount),
+        history.map((h) => h.performance.blockTime),
         "#8b5cf6", // Purple color
         "#c4b5fd", // Light purple
         charts,
       )
 
       plotHistoryGraph(
-        gasChartRef,
-        "Gas Limit",
+        txChartRef,
+        "Transaction Count",
         history.map((h) => h.performance.blockNumber),
-        history.map((h) => h.performance.gasLimit),
+        history.map((h) => h.performance.transactionCount),
         "#7c3aed", // Darker purple
         "#ddd6fe", // Very light purple
         charts,
@@ -41,6 +42,16 @@ const Dashboard = ({ data }) => {
         history.map((h) => h.network.totalDifficulty),
         "#6d28d9", // Deep purple
         "#ede9fe", // Pale purple
+        charts,
+      )
+
+      plotHistoryGraph(
+        pendingTxChartRef,
+        "Pending Transactions",
+        history.map((h) => h.performance.blockNumber),
+        history.map((h) => h.network.pendingTransactions),
+        "#9333ea", // Vibrant purple
+        "#f3e8ff", // Soft lavender
         charts,
       )
     }
@@ -78,27 +89,32 @@ const Dashboard = ({ data }) => {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
+            <h3 className="px-3 pt-2 text-purple-800 font-medium">Block Time</h3>
+            <div className="h-48">
+              <canvas ref={blockTimeChartRef}></canvas>
+            </div>
+          </div>
+
           <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
             <h3 className="px-3 pt-2 text-purple-800 font-medium">Transaction Count</h3>
-            <div className="h-64">
+            <div className="h-48">
               <canvas ref={txChartRef}></canvas>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
-              <h3 className="px-3 pt-2 text-purple-800 font-medium">Gas Limit</h3>
-              <div className="h-48">
-                <canvas ref={gasChartRef}></canvas>
-              </div>
+          <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
+            <h3 className="px-3 pt-2 text-purple-800 font-medium">Total Difficulty</h3>
+            <div className="h-48">
+              <canvas ref={diffChartRef}></canvas>
             </div>
+          </div>
 
-            <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
-              <h3 className="px-3 pt-2 text-purple-800 font-medium">Difficulty</h3>
-              <div className="h-48">
-                <canvas ref={diffChartRef}></canvas>
-              </div>
+          <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
+            <h3 className="px-3 pt-2 text-purple-800 font-medium">Pending Transactions</h3>
+            <div className="h-48">
+              <canvas ref={pendingTxChartRef}></canvas>
             </div>
           </div>
         </div>
@@ -108,4 +124,3 @@ const Dashboard = ({ data }) => {
 }
 
 export default Dashboard
-

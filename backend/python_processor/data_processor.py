@@ -71,9 +71,9 @@ async def process_data(raw_data):
 
     # Determine network health score (simple version)
     network_health = 100
-    if peer_count < 3:
+    if peer_count < 9:
         network_health -= 30
-    if block_time_diff > 20:
+    if block_time_diff > 16:
         network_health -= 20
     if gas_usage_percent > 80:
         network_health -= 15

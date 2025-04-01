@@ -80,7 +80,7 @@ const App = () => {
         </Tabs>
 
         <div className="text-center mt-6 text-purple-500 text-xs">
-          © 2025 Blockchain Monitor • Refreshed at {new Date().toLocaleTimeString()}
+          Built with ❤️ and data by <strong>Vasu</strong>
         </div>
       </div>
     </div>
