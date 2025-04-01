@@ -17,11 +17,14 @@ This project aims to build a **Blockchain Network Performance Monitor** to track
 - **Monitoring Tools**: Prometheus and Node Exporter for system metrics.
 
 ## Screenshots
-### Network Health
-![Network Health](Screenshot%20From%202025-04-02%2000-39-14.png)
-
-### Performance Monitor
-![Performance Monitor](Screenshot%20From%202025-04-02%2000-39-22.png)
 
 ### Dashboard Overview
-![Dashboard Overview](Screenshot%20From%202025-04-02%2000-39-34.png)
+![Dashboard Overview](images/Screenshot%20From%202025-04-02%2000-39-34.png)
+
+### Performance Monitor
+![Performance Monitor](images/Screenshot From 2025-04-02 00-39-22.png)
+
+### Network Health
+![Network Health](images/Screenshot From 2025-04-02 00-39-14.png)
+
+
