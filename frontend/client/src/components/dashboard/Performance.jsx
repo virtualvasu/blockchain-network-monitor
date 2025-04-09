@@ -1,5 +1,5 @@
 import { Server } from "lucide-react"
-import { ArrowUpCircle, Activity } from "lucide-react"
+import { ArrowUpCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip"
@@ -100,9 +100,121 @@ const Performance = ({ data }) => {
                         </div>
                     </div>
 
-                    <div className="bg-purple-100 rounded-xl p-6 border border-purple-200 shadow-md mt-6">
-                        <h3 className="text-lg font-medium text-purple-900 mb-2">Data Insights</h3>
-                        <p className="text-purple-800">There goes the data insights string...</p>
+
+                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200 shadow-md mt-6">
+                        <h3 className="text-lg font-medium text-purple-900 mb-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Performance Alerts
+                        </h3>
+
+                        {/* Gas Usage Alerts */}
+                        {latestData.performance.gasUsed < 150000000 && (
+                            <div className="mb-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-yellow-800">Unusual Gas Usage: Below Standard</h3>
+                                    <div className="mt-1 text-sm text-yellow-700">
+                                        <p>Gas usage of {latestData.performance.gasUsed.toLocaleString()} is below the standard. This indicates the block is not used much (low network activity, cheap transactions).
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {(latestData.performance.gasUsed > 150000000 && latestData.performance.gasUsed < 210000000) && (
+                            <div className="mb-3 bg-green-50 border-l-4 border-green-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-green-800">Standard Gas Usage</h3>
+                                    <div className="mt-1 text-sm text-green-700">
+                                        <p>Block moderately filled (healthy, expected network activity)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {latestData.performance.gasUsed > 210000000 && (
+                            <div className="mb-3 bg-red-50 border-l-4 border-red-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-red-800">High Gas Usage</h3>
+                                    <div className="mt-1 text-sm text-red-700">
+                                        <p>Gas usage of {latestData.performance.gasUsed.toLocaleString()} is above standard levels. This indicates complex transactions or smart contract executions. Monitor network congestion.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Transaction Rate Alerts */}
+                        {latestData.performance.transactionRate === 0 && (
+                            <div className="mb-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-yellow-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 2a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 001.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0010 2z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-yellow-800">Transaction Rate: Idle</h3>
+                                    <div className="mt-1 text-sm text-yellow-700">
+                                        <p>No transactions are currently being processed. Network activity has stopped or is experiencing issues. Consider investigating if this persists.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {latestData.performance.transactionRate > 0 && latestData.performance.transactionRate < 5 && (
+                            <div className="mb-3 bg-green-50 border-l-4 border-green-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-green-800">Transaction Rate: Normal</h3>
+                                    <div className="mt-1 text-sm text-green-700">
+                                        <p>Processing {latestData.performance.transactionRate.toLocaleString()} transactions per second. Network is operating within expected parameters.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {latestData.performance.transactionRate >= 5 && (
+                            <div className="mb-3 bg-red-50 border-l-4 border-red-500 rounded-md p-4 flex items-start">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-red-800">Transaction Rate: High Load</h3>
+                                    <div className="mt-1 text-sm text-red-700">
+                                        <p>Processing {latestData.performance.transactionRate.toLocaleString()} transactions per second! This high throughput may impact node performance. Monitor system resources closely.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                       
+
+                        {/* No Alerts Message */}
+                        {!latestData.performance.gasUsed && !latestData.performance.transactionRate && !prevData && (
+                            <p className="text-purple-800 italic">No performance alerts at this time. System is operating within normal parameters.</p>
+                        )}
                     </div>
                 </CardContent>
             </Card>

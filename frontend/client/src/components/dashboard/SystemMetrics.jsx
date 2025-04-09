@@ -32,8 +32,8 @@ const SystemMetrics = ({ data }) => {
 
           return Math.min(cpuTotal, 100); // cap at 100%
         }),
-        "#22c55e", // Green
-        "#bbf7d0", // Light green
+        "#8b5cf6", // purple
+        "#c4b5fd", // Light purple
         charts
       );
 
@@ -46,8 +46,8 @@ const SystemMetrics = ({ data }) => {
           const usagePercent = h.system.ramUsagePercent;
           return Math.min(usagePercent, 100);
         }),
-        "#3b82f6", // Blue
-        "#dbeafe", // Light blue
+        "#7c3aed", // Blue
+        "#ddd6fe", // Light blue
         charts
       );
     }
@@ -74,50 +74,51 @@ const SystemMetrics = ({ data }) => {
   }
 
   return (
-    <Card className="border border-green-200 shadow-lg bg-white/50 backdrop-blur-sm">
-      <CardHeader className="border-b border-green-100 bg-gradient-to-r from-green-50 to-green-100">
-        <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
-          <Activity className="h-6 w-6 text-green-700" />
+    <Card className="border border-purple-200 shadow-lg bg-white/50 backdrop-blur-sm">
+      <CardHeader className="border-b border-purple-100 bg-gradient-to-r from-purple-50 to-purple-100">
+        <CardTitle className="text-2xl text-purple-900 flex items-center gap-2">
+          <Activity className="h-6 w-6 text-purple-700" />
           System Metrics
         </CardTitle>
-        <CardDescription className="text-green-700">Live system resource usage overview</CardDescription>
+        <CardDescription className="text-purple-700">Live system resource usage overview</CardDescription>
       </CardHeader>
 
       <CardContent className="pt-6 space-y-6">
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
-            <p className="text-sm font-medium text-green-700 mb-1">CPU User %</p>
-            <p className="text-2xl font-bold text-green-900">{cpuUser}%</p>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+            <p className="text-sm font-medium text-purple-700 mb-1">CPU User %</p>
+            <p className="text-2xl font-bold text-purple-900">{cpuUser}%</p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
-            <p className="text-sm font-medium text-green-700 mb-1">CPU System %</p>
-            <p className="text-2xl font-bold text-green-900">{cpuSystem}%</p>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+            <p className="text-sm font-medium text-purple-700 mb-1">CPU System %</p>
+            <p className="text-2xl font-bold text-purple-900">{cpuSystem}%</p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
-            <p className="text-sm font-medium text-green-700 mb-1">CPU Total %</p>
-            <p className="text-2xl font-bold text-green-900">{cpuTotal}%</p>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+            <p className="text-sm font-medium text-purple-700 mb-1">CPU Total %</p>
+            <p className="text-2xl font-bold text-purple-900">{cpuTotal}%</p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
-            <p className="text-sm font-medium text-green-700 mb-1">RAM Usage %</p>
-            <p className="text-2xl font-bold text-green-900">{ramUsage}%</p>
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+            <p className="text-sm font-medium text-purple-700 mb-1">RAM Usage %</p>
+            <p className="text-2xl font-bold text-purple-900">{ramUsage}%</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-1 bg-green-50 rounded-lg border border-green-100">
-            <h3 className="px-3 pt-2 text-green-800 font-medium">Total CPU Usage</h3>
+          <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
+            <h3 className="px-3 pt-2 text-purple-800 font-medium">Total CPU Usage</h3>
             <div className="h-48">
               <canvas ref={cpuChartRef}></canvas>
             </div>
           </div>
 
-          <div className="p-1 bg-green-50 rounded-lg border border-green-100">
-            <h3 className="px-3 pt-2 text-green-800 font-medium">Memory Usage</h3>
+          <div className="p-1 bg-purple-50 rounded-lg border border-purple-100">
+            <h3 className="px-3 pt-2 text-purple-800 font-medium">Memory Usage</h3>
             <div className="h-48">
               <canvas ref={ramChartRef}></canvas>
             </div>
           </div>
         </div>
+        
       </CardContent>
     </Card>
   )

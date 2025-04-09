@@ -114,10 +114,6 @@ const NetworkHealth = ({ data }) => {
                         </div>
                     </div>
 
-                    <div className="bg-purple-100 rounded-xl p-6 border border-purple-200 shadow-md mt-6">
-                        <h3 className="text-lg font-medium text-purple-900 mb-2">Data Insights</h3>
-                        <p className="text-purple-800">There goes the data insights string...</p>
-                    </div>
                 </CardContent>
             </Card>
         </TooltipProvider>

@@ -91,7 +91,7 @@ async def process_data(raw_data):
 
     # Determine network health score (simple version)
     network_health = 100
-    if peer_count < 9:
+    if peer_count < 3:
         network_health -= 30
     if block_time_diff > 16:
         network_health -= 20
@@ -104,15 +104,7 @@ async def process_data(raw_data):
     
     network_health = max(0, network_health)  # Ensure it doesn't go below 0
 
-    # Comprehensive alert checks
-    alerts = {
-        "slowBlock": block_time_diff > 20,
-        "highGasUsage": gas_usage_percent > 80,
-        "nodeDrop": peer_count < 3,
-        "orphanBlock": orphaned_blocks > 0,
-        "txRateLow": tx_rate < 0.1 and transactions_count > 0,
-        "pendingTxnHigh": pending_txns > 50
-    }
+    
 
     # Organize data into requested sections
     performance = {
@@ -140,14 +132,7 @@ async def process_data(raw_data):
     }
 
     dashboard = {
-        "networkHealthScore": network_health,
-        "alerts": alerts,
-        "historicalComparison": {
-            "avgBlockTime": round(avg_block_time, 2),
-            "avgTxnRate": round(sum([h["performance"]["transactionRate"] for h in data_cache]) / len(data_cache), 3) if data_cache else 0,
-            "avgGasUsage": round(sum([h["performance"]["gasUsagePercent"] for h in data_cache]) / len(data_cache), 2) if data_cache else 0,
-            "avgPeerCount": round(sum([h["network"]["peerCount"] for h in data_cache]) / len(data_cache), 2) if data_cache else 0
-        }
+        "networkHealthScore": network_health
     }
     system_metrics = {
         "totalRAM_MB": total_ram,
@@ -173,11 +158,11 @@ async def process_data(raw_data):
         "performance": performance,
         "network": network,
         "system": system_metrics,
-        "dashboard": dashboard,
-        "alerts": alerts
+        "dashboard": dashboard
     }
 
     # Store this data into the cache (rolling window of 100 entries)
+    # creating the history json object here
     data_cache.append(current_data)
 
     # Return the latest data plus history for frontend visualization
@@ -186,7 +171,6 @@ async def process_data(raw_data):
         "performance": performance,
         "network": network,
         "dashboard": dashboard,
-        "alerts": alerts,
         "history": list(data_cache)  # Send historical data for graphing
     }
 
