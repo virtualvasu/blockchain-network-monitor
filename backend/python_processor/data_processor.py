@@ -31,8 +31,9 @@ async def process_data(raw_data):
 
     latest_block = raw_data.get("latestBlockData", {})
     network_data = raw_data.get("networkData", {})
+    oslogs = raw_data.get("oslogs",{})
 
-    # Extract basic data
+    # Extract basic data for processing later
     block_number = int(latest_block.get("blockNumber", 0))
     gas_used = int(latest_block.get("gasUsed", 0))
     gas_limit = int(latest_block.get("gasLimit", 1))
@@ -44,11 +45,30 @@ async def process_data(raw_data):
     block_size = int(latest_block.get("blockSize", 0))
     chain_id = int(network_data.get("chainId", 0))
     orphaned_blocks = int(latest_block.get("orphanedBlocks", 0))
+    
+    #os logs basic data
+    
+    total_ram = float(oslogs.get("total_ram", 0))
+    ram_available = float(oslogs.get("ram_available", 0))
+    ram_used = float(oslogs.get("ram_used", 0))
+    cpu_user_secs = float(oslogs.get("cpu_user_secs", 0))
+    cpu_system_secs = float(oslogs.get("cpu_system_secs", 0))
+    network_received = float(oslogs.get("network_received", 0))
+    network_transmitted = float(oslogs.get("network_transmitted", 0))
+    system_load_avg_one_min = float(oslogs.get("system_load_avg_one_min", 0))
+    system_load_avg_five_min = float(oslogs.get("system_load_avg_five_min", 0))
+    system_load_avg_fifteen_min = float(oslogs.get("system_load_avg_fifteen_min", 0))
+    
 
     # Calculate derived metrics
     gas_usage_percent = (gas_used / gas_limit) * 100 if gas_limit > 0 else 0
     cumulative_gas_used += gas_used
     block_fill_ratio = (block_size / max_block_size) * 100 if max_block_size > 0 else 0
+    
+    #derived metrics for os logs
+    ram_usage_percent = (ram_used / total_ram) * 100 if total_ram > 0 else 0
+    total_cpu_secs = cpu_user_secs + cpu_system_secs
+
 
     # Calculate block time difference from previous block
     block_time_diff = 0
@@ -129,6 +149,20 @@ async def process_data(raw_data):
             "avgPeerCount": round(sum([h["network"]["peerCount"] for h in data_cache]) / len(data_cache), 2) if data_cache else 0
         }
     }
+    system_metrics = {
+        "totalRAM_MB": total_ram,
+        "ramUsed_MB": ram_used,
+        "ramAvailable_MB": ram_available,
+        "ramUsagePercent": round(ram_usage_percent, 2),
+        "cpuUserSecs": cpu_user_secs,
+        "cpuSystemSecs": cpu_system_secs,
+        "totalCpuSecs": round(total_cpu_secs, 2),
+        "networkReceived_MB": network_received,
+        "networkTransmitted_MB": network_transmitted,
+        "systemLoadAvg1Min": system_load_avg_one_min,
+        "systemLoadAvg5Min": system_load_avg_five_min,
+        "systemLoadAvg15Min": system_load_avg_fifteen_min
+    }
 
     # Current timestamp for the data point
     current_time = int(time.time())
@@ -138,6 +172,7 @@ async def process_data(raw_data):
         "timestamp": current_time,
         "performance": performance,
         "network": network,
+        "system": system_metrics,
         "dashboard": dashboard,
         "alerts": alerts
     }

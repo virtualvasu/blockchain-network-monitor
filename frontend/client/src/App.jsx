@@ -7,6 +7,7 @@ import { Database, RefreshCw } from "lucide-react"
 import Dashboard from "./components/dashboard/Dashboard"
 import Performance from "./components/dashboard/Performance"
 import NetworkHealth from "./components/dashboard/NetworkHealth"
+import SystemMetrics from "./components/dashboard/SystemMetrics"
 import LoadingState from "./components/dashboard/LoadingState"
 import useFetchData from "./hooks/useFetchData"
 import "./App.css"
@@ -64,6 +65,12 @@ const App = () => {
             >
               Network Health
             </TabsTrigger>
+            <TabsTrigger
+              value="systemMetrics"
+              className="data-[state=active]:bg-white data-[state=active]:text-purple-900 data-[state=active]:shadow-sm px-4 py-2 rounded-md text-purple-700"
+            >
+              System Metrics
+            </TabsTrigger>
           </TabsList>
 
           <div className="bg-white/30 backdrop-blur-sm p-1 rounded-xl border border-purple-100 shadow-xl">
@@ -75,6 +82,9 @@ const App = () => {
             </TabsContent>
             <TabsContent value="networkHealth" className="mt-0">
               {isLoading || !data ? <LoadingState /> : <NetworkHealth data={data} />}
+            </TabsContent>
+            <TabsContent value="systemMetrics" className="mt-0">
+              {isLoading || !data ? <LoadingState /> : <SystemMetrics data={data} />}
             </TabsContent>
           </div>
         </Tabs>
@@ -88,4 +98,3 @@ const App = () => {
 }
 
 export default App
-
