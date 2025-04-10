@@ -1,8 +1,7 @@
 import { useState } from "react"
+import { RPC_URLS } from '../../../../../config';
 import {
-    Search, AlertCircle, CheckCircle2, ArrowRight, FileCode, Banknote,
-    ArrowUpRight, Hash, Clock, Cpu, Code, Table, Coins,
-    FileText, Shield, Settings, RefreshCw
+    Search, AlertCircle, Hash, CheckCircle2, ArrowRight, FileCode, Banknote, Cpu, Code, Table, Coins, Shield, Settings, RefreshCw
 } from "lucide-react"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card"
@@ -97,7 +96,7 @@ const BlockExplorer = () => {
         setTxError("")
         setIsContract(false)
         try {
-            const res = await fetch("http://localhost:8550", {
+            const res = await fetch(RPC_URLS.DAAVEE, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -131,7 +130,7 @@ const BlockExplorer = () => {
     // Check if an address is a contract
     const checkIfContract = async (address) => {
         try {
-            const res = await fetch("http://localhost:8550", {
+            const res = await fetch(RPC_URLS.DAAVEE, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -158,7 +157,7 @@ const BlockExplorer = () => {
 
         try {
             // Get contract code
-            const codeRes = await fetch("http://localhost:8550", {
+            const codeRes = await fetch(RPC_URLS.DAAVEE, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -171,7 +170,7 @@ const BlockExplorer = () => {
             const codeJson = await codeRes.json()
 
             // Get contract balance
-            const balanceRes = await fetch("http://localhost:8550", {
+            const balanceRes = await fetch(RPC_URLS.DAAVEE, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -184,7 +183,7 @@ const BlockExplorer = () => {
             const balanceJson = await balanceRes.json()
 
             // Get storage at index 0 (just as an example)
-            const storageRes = await fetch("http://localhost:8550", {
+            const storageRes = await fetch(RPC_URLS.DAAVEE, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -622,7 +621,7 @@ const BlockExplorer = () => {
                             </TabsContent>
                         </Tabs>
 
-                        
+
                     </Card>
                 )}
 
@@ -857,7 +856,7 @@ const BlockExplorer = () => {
                             </TabsContent>
                         </Tabs>
 
-                        
+
                     </Card>
                 )}
             </div>

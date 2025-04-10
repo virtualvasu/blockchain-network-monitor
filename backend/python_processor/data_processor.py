@@ -3,12 +3,37 @@ import asyncio
 import json
 from collections import deque
 import time
+import re
+
+# Function to parse config.js file
+def parse_config_js(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            content = file.read()
+            
+        # Extract CHAIN_DATA_URL using regex
+        match = re.search(r"CHAIN_DATA_URL:\s*'([^']*)'", content)
+        if match:
+            chain_data_url = match.group(1)
+            return {
+                "CHAIN_DATA_URL": chain_data_url
+            }
+        else:
+            print("Could not find CHAIN_DATA_URL in config file")
+            return {"CHAIN_DATA_URL": "http://localhost:3000/getChainData"}  # Default fallback
+    except Exception as e:
+        print(f"Error parsing config file: {e}")
+        return {"CHAIN_DATA_URL": "http://localhost:3000/getChainData"}  # Default fallback
+
+# Load config
+config = parse_config_js("config.js")  # Adjust the path to your config.js file
 
 # Fetch data from Node backend (non-blocking)
 async def fetch_data():
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.get("http://localhost:3000/getChainData") as response:
+            # Use the URL from the config file
+            async with session.get(config["CHAIN_DATA_URL"]) as response:
                 return await response.json()
         except Exception as e:
             print(f"Error fetching data: {e}")

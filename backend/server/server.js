@@ -1,12 +1,12 @@
 import express from 'express';
+import { RPC_URLS, NODE_EXPORTERS } from "../../config.js"
 import Web3 from 'web3';
 const app = express();
-const web3 = new Web3('http://localhost:8550');
-// import axios from 'axios';
+const web3 = new Web3(RPC_URLS.DAAVEE);
 
 async function fetchSystemMetrics() {
   try {
-    const response = await fetch('http://localhost:9100/metrics'); // Node Exporter endpoint
+    const response = await fetch(NODE_EXPORTERS.NODE1); // Node Exporter endpoint
     const text = await response.text();
 
     // RAM parsing

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { PROCESSED_DATA_URL } from '../../../../config';
 
 const useFetchData = () => {
   const [data, setData] = useState(null)
@@ -23,7 +24,7 @@ const useFetchData = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch("http://127.0.0.1:5000/processed_data", { cache: "no-store" })
+      const response = await fetch(PROCESSED_DATA_URL, { cache: "no-store" })
       if (!response.ok) throw new Error("Failed to fetch")
       const jsonData = await response.json()
       setData(jsonData.data)
