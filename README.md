@@ -65,7 +65,7 @@ The monitor continuously collects data from blockchain nodes, processes it into 
 - **Data Visualization:** Visual representation of contract interactions
 
 ![Block explorer ](images/Screenshot%20From%202025-04-10%2022-46-18.png)
-![Block explorer ](images/Screenshot%20From%202025-04-10%2022-46-18.png)
+![Block explorer ](images/Screenshot%20From%202025-04-10%2022-46-32.png)
 
 ---
 
