@@ -8,6 +8,7 @@ import Dashboard from "./components/dashboard/Dashboard"
 import Performance from "./components/dashboard/Performance"
 import NetworkHealth from "./components/dashboard/NetworkHealth"
 import SystemMetrics from "./components/dashboard/SystemMetrics"
+import BlockExplorer from "./components/dashboard/BlockExplorer"
 import LoadingState from "./components/dashboard/LoadingState"
 import useFetchData from "./hooks/useFetchData"
 import "./App.css"
@@ -46,7 +47,7 @@ const App = () => {
         </div>
 
         <Tabs defaultValue="dashboard" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="flex justify-center space-x-2 bg-purple-100/80 p-1 rounded-lg w-fit mx-auto">
+          <TabsList className="flex flex-wrap justify-center space-x-2 bg-purple-100/80 p-1 rounded-lg w-fit mx-auto">
             <TabsTrigger
               value="dashboard"
               className="data-[state=active]:bg-white data-[state=active]:text-purple-900 data-[state=active]:shadow-sm px-4 py-2 rounded-md text-purple-700"
@@ -71,6 +72,12 @@ const App = () => {
             >
               System Metrics
             </TabsTrigger>
+            <TabsTrigger
+              value="blockExplorer"
+              className="data-[state=active]:bg-white data-[state=active]:text-purple-900 data-[state=active]:shadow-sm px-4 py-2 rounded-md text-purple-700"
+            >
+              Block Explorer
+            </TabsTrigger>
           </TabsList>
 
           <div className="bg-white/30 backdrop-blur-sm p-1 rounded-xl border border-purple-100 shadow-xl">
@@ -85,6 +92,9 @@ const App = () => {
             </TabsContent>
             <TabsContent value="systemMetrics" className="mt-0">
               {isLoading || !data ? <LoadingState /> : <SystemMetrics data={data} />}
+            </TabsContent>
+            <TabsContent value="blockExplorer" className="mt-0">
+              <BlockExplorer />
             </TabsContent>
           </div>
         </Tabs>
