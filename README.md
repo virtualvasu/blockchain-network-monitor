@@ -10,7 +10,7 @@ A comprehensive real-time monitoring solution for blockchain networks with advan
 
 The monitor continuously collects data from blockchain nodes, processes it into meaningful metrics, and presents it through a responsive web interface. This enables network operators and developers to quickly identify issues, optimize performance, and ensure network reliability.
 
-> ⚡ **Note:** This monitor was specifically built and optimized for a **private blockchain network** that I developed during my **internship at IIT Bhilai** as a **Blockchain Developer**.  
+> ⚡ **Note:** This monitor was specifically built and optimized for a **private blockchain network**.
 > Installation instructions for general public use are not included yet, as the system is fine-tuned for that private deployment.
 
 ---
